@@ -3,14 +3,14 @@ import fs from "fs";
 import path from "path";
 
 const s3 = new S3({
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    endpoint: process.env.S3_ENDPOINT
+    accessKeyId: process.env.REACT_AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.REACT_AWS_SECRET_ACCESS_KEY,
+    endpoint: process.env.REACT_S3_ENDPOINT
 })
 export const fetchS3Folder = async (key: string, localPath: string): Promise<void> => {
     try {
         const params = {
-            Bucket: process.env.S3_BUCKET ?? "",
+            Bucket: process.env.REACT_S3_BUCKET ?? "",
             Prefix: key
         };
         if (!fs.existsSync(localPath)) {
@@ -24,7 +24,7 @@ export const fetchS3Folder = async (key: string, localPath: string): Promise<voi
                 const fileKey = file.Key;
                 if (fileKey) {
                     const getObjectParams = {
-                        Bucket: process.env.S3_BUCKET ?? "",
+                        Bucket: process.env.REACT_S3_BUCKET ?? "",
                         Key: fileKey
                     };
 
@@ -50,7 +50,7 @@ export async function copyS3Folder(sourcePrefix: string, destinationPrefix: stri
 
         // List all objects in the source folder
         const listParams = {
-            Bucket: process.env.S3_BUCKET ?? "",
+            Bucket: process.env.REACT_S3_BUCKET ?? "",
             Prefix: sourcePrefix,
             ContinuationToken: continuationToken
         };
@@ -69,8 +69,8 @@ export async function copyS3Folder(sourcePrefix: string, destinationPrefix: stri
             console.log("destinationKey???", destinationPrefix)
 
             let copyParams = {
-                Bucket: process.env.S3_BUCKET ?? "",
-                CopySource: `${process.env.S3_BUCKET}/${object.Key}`,
+                Bucket: process.env.REACT_S3_BUCKET ?? "",
+                CopySource: `${process.env.REACT_S3_BUCKET}/${object.Key}`,
                 Key: destinationKey
             };
 
@@ -125,7 +125,7 @@ function createFolder(dirName: string) {
 
 export const saveToS3 = async (key: string, filePath: string, content: string): Promise<void> => {
     const params = {
-        Bucket: process.env.S3_BUCKET ?? "",
+        Bucket: process.env.REACT_S3_BUCKET ?? "",
         Key: `${key}${filePath}`,
         Body: content
     }
